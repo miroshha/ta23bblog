@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Tag;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -32,5 +33,20 @@ class Post extends Model
 
     public function comments() {
         return $this->hasMany(Comment::class);
+    }
+
+    public function likes() {
+        return $this->hasMany(Like::class);
+    }
+
+    protected function authHasLiked(): Attribute {
+        return Attribute::get(function (){
+            if(!auth()->check()) return false;
+            return $this->likes()->where('user_id', auth()->id())->exists();
+        });
+    }
+
+    public function tags() {
+        return $this->belongsToMany(Tag::class);
     }
 }
