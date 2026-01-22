@@ -5,27 +5,32 @@ namespace App\Http\Controllers;
 use App\Models\Like;
 use App\Models\Post;
 use App\Models\User;
+use App\Models\Tag;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class PublicController extends Controller
 {
-    public function index(){
+    public function index()
+    {
         $posts = Post::with('user')->withCount('comments', 'likes')->latest()->simplePaginate(16);
         return view('welcome', compact('posts'));
     }
 
-    public function post(Post $post){
+    public function post(Post $post)
+    {
         return view('post', compact('post'));
     }
 
-    public function secure(){
+    public function secure()
+    {
         return view('secure');
     }
 
-    public function like(Post $post){
+    public function like(Post $post)
+    {
         $like = $post->likes()->where('user_id', auth()->id())->first();
-        if($like){
+        if ($like) {
             $like->delete();
         } else {
             $like = new Like();
@@ -36,8 +41,21 @@ class PublicController extends Controller
         return redirect()->back();
     }
 
-    public function user(User $user){
+    public function user(User $user)
+    {
         $posts = $user->posts()->with('user')->withCount('comments', 'likes')->latest()->simplePaginate(16);
         return view('welcome', compact('posts'));
     }
+
+    public function tag(Tag $tag)
+    {
+        $posts = $tag->posts()
+            ->with('user', 'tags')
+            ->withCount('comments', 'likes')
+            ->latest()
+            ->simplePaginate(16);
+
+        return view('welcome', compact('posts', 'tag'));
+    }
+
 }

@@ -15,38 +15,46 @@ class Post extends Model
 
     protected $fillable = ['title', 'body'];
 
-    protected function snippet(): Attribute {
-        return Attribute::get(function (){
+    protected function snippet(): Attribute
+    {
+        return Attribute::get(function () {
             return explode("\n\n", $this->body)[0];
         });
     }
 
-    protected function displayBody(): Attribute {
-        return Attribute::get(function (){
+    protected function displayBody(): Attribute
+    {
+        return Attribute::get(function () {
             return nl2br(htmlspecialchars($this->body));
         });
     }
 
-    public function user() {
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
 
-    public function comments() {
+    public function comments()
+    {
         return $this->hasMany(Comment::class);
     }
 
-    public function likes() {
+    public function likes()
+    {
         return $this->hasMany(Like::class);
     }
 
-    protected function authHasLiked(): Attribute {
-        return Attribute::get(function (){
-            if(!auth()->check()) return false;
+    protected function authHasLiked(): Attribute
+    {
+        return Attribute::get(function () {
+            if (!auth()->check())
+                return false;
             return $this->likes()->where('user_id', auth()->id())->exists();
         });
     }
 
-    public function tags() {
+    public function tags()
+    {
         return $this->belongsToMany(Tag::class);
     }
 }
