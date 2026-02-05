@@ -9,6 +9,7 @@ Route::get('/', [PublicController::class, 'index'])->name('home');
 Route::get('/post/{post}', [PublicController::class, 'post'])->name('post');
 Route::get('/user/{user}', [PublicController::class, 'user'])->name('user');
 Route::get('/tag/{tag}', [PublicController::class, 'tag'])->name('tag');
+Route::get('/category/{category}', [PublicController::class, 'category'])->name('category');
 // Route::get('/admin/posts', [PostController::class, 'index'])->name('posts.index');
 // Route::get('/admin/posts/create', [PostController::class, 'create'])->name('posts.create');
 // Route::post('/admin/posts', [PostController::class, 'store'])->name('posts.store');
